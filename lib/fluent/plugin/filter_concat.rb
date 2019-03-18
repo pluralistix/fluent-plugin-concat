@@ -58,7 +58,7 @@ module Fluent::Plugin
         raise Fluent::ConfigError, "n_lines and multiline_start_regexp/multiline_end_regexp are exclusive"
       end
       if @n_lines.nil? && @multiline_start_regexp.nil? && @multiline_end_regexp.nil? && @partial_key.nil?
-        raise Fluent::ConfigError, "Either n_lines or multiline_start_regexp or multiline_end_regexp is required"
+        raise Fluent::ConfigError, "Either n_lines, multiline_start_regexp, multiline_end_regexp, or partial_key is required"
       end
       if @partial_key && @n_lines
         raise Fluent::ConfigError, "partial_key and n_lines are exclusive"
