@@ -122,7 +122,16 @@ Default value: `512000`.
 
 The method if overflow buffer
 
-Available values: ignore, truncate, drop, new
+Available values: `ignore`, `truncate`, `drop`, `new`
+
+* `ignore`
+  * Concatenate the current record in the buffer
+* `truncate`
+  * Drop the current record and flush the buffer
+* `drop`
+  * Drop the current record and clear the buffer
+* `new`
+  * Flush the buffer and store the current record in next buffer
 
 Default value: `ignore`.
 
