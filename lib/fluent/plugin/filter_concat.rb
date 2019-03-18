@@ -197,14 +197,7 @@ module Fluent::Plugin
       end
       if force_flush && @buffer_overflow_method == :new
         @buffer[stream_identity] << [tag, time, record]
-        @buffer_size[stream_identity] = if [].respond_to?(:sum)
-                                          record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
-                                        else
-                                          # Support Ruby 2.3 or earlier
-                                          record.inject(0) do |memo, (key, value)|
-                                            memo + key.bytesize + value.bytesize
-                                          end
-                                        end
+        @buffer_size[stream_identity] = record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
         if @partial_value != record[@partial_key]
           new_time, new_record = flush_buffer(stream_identity)
           time = new_time if @use_first_timestamp
@@ -283,14 +276,7 @@ module Fluent::Plugin
     end
 
     def overflow?(stream_identity, record)
-      size = if [].respond_to?(:sum)
-               record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
-             else
-               # Support Ruby 2.3 or earlier
-               record.inject(0) do |memo, (key, value)|
-                 memo + key.bytesize + value.bytesize
-               end
-             end
+      size = record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
       if @buffer_size[stream_identity] + size > @buffer_limit_size
         @buffer_size[stream_identity] = 0
         true
@@ -354,6 +340,21 @@ module Fluent::Plugin
         event_router.emit(tag, time, record)
       else
         router.emit_error_event(tag, time, record, TimeoutError.new(message))
+      end
+    end
+  end
+end
+
+class Array
+  # Support Ruby 2.3 or earlier
+  unless [].respond_to?(:sum)
+    def sum
+      inject(0) do |memo, value|
+        if block_given?
+          memo + yield(value)
+        else
+          memo + value
+        end
       end
     end
   end
