@@ -22,7 +22,7 @@ module Fluent::Plugin
     config_param :stream_identity_key, :string, default: nil
     desc "The interval between data flushes, 0 means disable timeout"
     config_param :flush_interval, :time, default: 60
-    desc "The label name to handle timeout"
+    desc "The label name to handle events caused by timeout"
     config_param :timeout_label, :string, default: nil
     desc "Use timestamp of first record when buffer is flushed"
     config_param :use_first_timestamp, :bool, default: false
@@ -34,7 +34,7 @@ module Fluent::Plugin
     config_param :keep_partial_key, :bool, default: false
     desc "The max size of each buffer"
     config_param :buffer_limit_size, :size, default: 500 * 1024 # 500k
-    desc ""
+    desc "The method if overflow buffer"
     config_param :buffer_overflow_method, :enum, list: [:ignore, :truncate, :drop, :new], default: :ignore
 
     class TimeoutError < StandardError
