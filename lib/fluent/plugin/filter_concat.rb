@@ -32,8 +32,8 @@ module Fluent::Plugin
     config_param :partial_value, :string, default: nil
     desc "If true, keep partial_key in concatenated records"
     config_param :keep_partial_key, :bool, default: false
-    desc ""
-    config_param :buffer_size_limit, :size, default: 500 * 1024 # 500k
+    desc "The max size of each buffer"
+    config_param :buffer_limit_size, :size, default: 500 * 1024 # 500k
     desc ""
     config_param :buffer_overflow_method, :enum, list: [:ignore, :truncate, :drop, :new], default: :ignore
 
@@ -277,7 +277,7 @@ module Fluent::Plugin
 
     def overflow?(stream_identity, record)
       size = record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
-      if @buffer_size[stream_identity] + size > @buffer_size_limit
+      if @buffer_size[stream_identity] + size > @buffer_limit_size
         @buffer_size[stream_identity] = 0
         true
       else

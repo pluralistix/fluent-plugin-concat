@@ -741,7 +741,7 @@ class FilterConcatTest < Test::Unit::TestCase
         partial_key partial_message
         partial_value true
         keep_partial_key false
-        buffer_size_limit 10
+        buffer_limit_size 10
         buffer_overflow_method ignore
       CONFIG
       messages = [
@@ -768,7 +768,7 @@ class FilterConcatTest < Test::Unit::TestCase
         partial_key partial_message
         partial_value true
         keep_partial_key false
-        buffer_size_limit 60
+        buffer_limit_size 60
         buffer_overflow_method truncate
       CONFIG
       messages = [
@@ -797,7 +797,7 @@ class FilterConcatTest < Test::Unit::TestCase
         partial_key partial_message
         partial_value true
         keep_partial_key false
-        buffer_size_limit 100
+        buffer_limit_size 100
         buffer_overflow_method drop
       CONFIG
       messages = [
@@ -824,7 +824,7 @@ class FilterConcatTest < Test::Unit::TestCase
         partial_key partial_message
         partial_value true
         keep_partial_key false
-        buffer_size_limit 90
+        buffer_limit_size 90
         buffer_overflow_method new
       CONFIG
       messages = [
