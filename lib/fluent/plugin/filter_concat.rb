@@ -197,7 +197,14 @@ module Fluent::Plugin
       end
       if force_flush && @buffer_overflow_method == :new
         @buffer[stream_identity] << [tag, time, record]
-        @buffer_size[stream_identity] = record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
+        @buffer_size[stream_identity] = if [].respond_to?(:sum)
+                                          record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
+                                        else
+                                          # Support Ruby 2.3 or earlier
+                                          record.inject(0) do |memo, (key, value)|
+                                            memo + key.bytesize + value.bytesize
+                                          end
+                                        end
         if @partial_value != record[@partial_key]
           new_time, new_record = flush_buffer(stream_identity)
           time = new_time if @use_first_timestamp
