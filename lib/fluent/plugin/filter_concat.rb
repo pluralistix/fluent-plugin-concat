@@ -276,7 +276,14 @@ module Fluent::Plugin
     end
 
     def overflow?(stream_identity, record)
-      size = record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
+      size = if [].respond_to?(:sum)
+               record.keys.sum(&:bytesize) + record.values.sum(&:bytesize)
+             else
+               # Support Ruby 2.3 or earlier
+               record.inject(0) do |memo, (key, value)|
+                 memo + key.bytesize + value.bytesize
+               end
+             end
       if @buffer_size[stream_identity] + size > @buffer_limit_size
         @buffer_size[stream_identity] = 0
         true
