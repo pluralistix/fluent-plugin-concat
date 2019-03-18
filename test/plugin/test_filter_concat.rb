@@ -59,7 +59,7 @@ class FilterConcatTest < Test::Unit::TestCase
     end
 
     test "either" do
-      assert_raise(Fluent::ConfigError.new("Either n_lines or multiline_start_regexp or multiline_end_regexp is required")) do
+      assert_raise(Fluent::ConfigError.new("Either n_lines, multiline_start_regexp, multiline_end_regexp, or partial_key is required")) do
         create_driver(<<-CONFIG)
           key message
         CONFIG
