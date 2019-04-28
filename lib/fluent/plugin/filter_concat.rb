@@ -168,7 +168,7 @@ module Fluent::Plugin
     def process_partial(stream_identity, tag, time, record)
       new_es = Fluent::MultiEventStream.new
       @buffer[stream_identity] << [tag, time, record]
-      unless @partial_value == record[@partial_key]
+      if ( record[@partial_key].nil? || ( ( @partial_value == record[@partial_key] ) && ( record[@key][-1].ord == 13 ) ) )
         new_time, new_record = flush_buffer(stream_identity)
         time = new_time if @use_first_timestamp
         new_record.delete(@partial_key)
